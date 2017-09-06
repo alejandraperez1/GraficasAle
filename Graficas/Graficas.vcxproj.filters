@@ -24,6 +24,9 @@
     <ClCompile Include="Rectangle.cpp">
       <Filter>Archivos de encabezado</Filter>
     </ClCompile>
+    <ClCompile Include="InputFile.cpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Circle.h">
@@ -32,5 +35,11 @@
     <ClInclude Include="Rectangle.h">
       <Filter>Archivos de recursos</Filter>
     </ClInclude>
+    <ClInclude Include="InputFile.h">
+      <Filter>Archivos de recursos</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Prueba.txt" />
   </ItemGroup>
 </Project>
