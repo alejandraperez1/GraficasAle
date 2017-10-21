@@ -1,8 +1,5 @@
 #include "Shader.h"
-
-#include <fstream>
-#include <iostream>
-#include <sstream>
+#include "InputFile.h"
 
 Shader::Shader() {
 	_shaderHandle = 0;
@@ -13,11 +10,19 @@ Shader::~Shader() {
 }
 
 void Shader::CreateShader(std::string path, GLenum type) {
-	std::string vertexSource = path;
-	const GLchar *vertexSource_c = (const GLchar*)vertexSource.c_str();
-	_shaderHandle = glCreateShader(type);
-	glShaderSource(_shaderHandle, 1, &vertexSource_c, nullptr);
-	glCompileShader(_shaderHandle);
+	InputFile ifile;
+	if (!ifile.Read(path)) return;
+	std::string source = ifile.GetContents();
+	
+		if (_shaderHandle)
+		glDeleteShader(_shaderHandle);
+	
+		_shaderHandle = glCreateShader(type);
+	
+		const GLchar *source_c = (const GLchar*)source.c_str();
+	glShaderSource(_shaderHandle, 1, &source_c, nullptr);
+	
+		glCompileShader(_shaderHandle);
 }
 GLuint Shader::GetHandle() {
 	return _shaderHandle;
