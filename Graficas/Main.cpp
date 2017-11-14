@@ -14,11 +14,14 @@ Autor: A0133993 Alejandra Maria Perez Aleman
 #include "ShaderProgram.h"
 #include "Transform.h"
 
+
 Camera _camera;
 Mesh _mesh;
 Transform _transform;
 Transform _t2;
 ShaderProgram _shaderProgram;
+glm::vec3 LightColor;
+glm::vec3 PixelPosition;
 
 // Función que va a inicializar toda la memoria del programa.
 void Initialize()
@@ -57,7 +60,7 @@ void Initialize()
 	positions.push_back(glm::vec3(3.0f, -3.0f, -3.0f));
 	positions.push_back(glm::vec3(3.0f, -3.0f, 3.0f));
 	positions.push_back(glm::vec3(-3.0f, -3.0f, 3.0f));
-	
+
 
 	// Vamos a crear una lista para almacenar colores RGB
 	// Esta lista está en CPU y RAM
@@ -92,9 +95,9 @@ void Initialize()
 	colors.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
 	colors.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
 	colors.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
-	
 
-	std::vector<unsigned int> indices = {0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7,8,9,10,9,11,10,12,13,14,12,14,15,16,17,18,16,18,19,20,21,22,20,22,23};
+
+	std::vector<unsigned int> indices = { 0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7,8,9,10,9,11,10,12,13,14,12,14,15,16,17,18,16,18,19,20,21,22,20,22,23 };
 
 	_mesh.CreateMesh(24);
 	_mesh.SetPositionAttribute(positions, GL_STATIC_DRAW, 0);
@@ -108,8 +111,15 @@ void Initialize()
 	_shaderProgram.SetAttribute(1, "VertexColor");
 	_shaderProgram.LinkProgram();
 
-	_transform.SetPosition(10.0f, 0.0f, -40.0f);
-	_t2.SetPosition(-10.0f, 0.0f, -40.0f);
+	_transform.SetPosition(0.0f, 0.0f, -40.0f);
+	_t2.SetPosition(0.0f, -5.0f, -40.0f);
+	_camera.SetPosition(0.0f, 0.0f, 10.0f);
+
+	LightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	
+
+
 }
 
 void MainLoop()
@@ -117,16 +127,16 @@ void MainLoop()
 	// Borramos el buffer de color y profundidad siempre al inicio de un nuevo frame.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	_transform.Rotate(0.0f, 0.01f, 0.0f, true);
+	_transform.Rotate(0.01f, 0.01f, 0.01f, true);
 
 	_shaderProgram.Activate();
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix());
-	
+	_shaderProgram.SetUniformf("LightColor",LightColor);
 	_mesh.Draw(GL_TRIANGLES);
 	_shaderProgram.Deactivate();
 
 
-	_t2.Rotate(0.0f, -0.01f, 0.0f, true);
+	_t2.SetScale(10,0.1,10);
 
 	_shaderProgram.Activate();
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _t2.GetModelMatrix());
@@ -150,6 +160,7 @@ void Idle()
 void ReshapeWindow(int width, int height)
 {
 	glViewport(0, 0, width, height);
+	_camera.SetPerspective(1.0f, 1000.0f, 60.0f,/*aR(aspectRatio)=width/height*/ (float) /*<- eso es tipo de variable al que quiero llegar*/width / (float)height);
 }
 
 int main(int argc, char* argv[])

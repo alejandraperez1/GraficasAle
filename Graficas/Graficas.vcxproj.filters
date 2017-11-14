@@ -82,5 +82,11 @@
     <None Include="Default.frag">
       <Filter>Archivos de código fuente\Shaders</Filter>
     </None>
+    <None Include="PhongShading.frag">
+      <Filter>Archivos de código fuente\Shaders</Filter>
+    </None>
+    <None Include="PhongShading.vert">
+      <Filter>Archivos de código fuente\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
