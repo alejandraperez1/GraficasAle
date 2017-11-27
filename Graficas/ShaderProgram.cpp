@@ -84,6 +84,7 @@ void ShaderProgram::SetAttribute(GLuint locationIndex, std::string name)
 	glBindAttribLocation(_programHandle, locationIndex, name.c_str());
 }
 
+
 void ShaderProgram::SetUniformf(std::string name, float x)
 {
 	GLint uniformLocation = glGetUniformLocation(_programHandle, name.c_str());
