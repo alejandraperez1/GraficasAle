@@ -24,7 +24,7 @@ void main()
 	InterpolatedColor = VertexColor;
 	gl_Position = mvpMatrix * vec4(VertexPosition, 1.0f);
 	PixelPosition = vec3 (modelMatrix * vec4 (VertexPosition, 1.0));
-	Interpolate Normal= normalMatrix* VertexNormal;
+	InterpolateNormal= normalMatrix* VertexNormal;
 	
 	
 }
