@@ -1,7 +1,7 @@
 /*********************************************************
 Materia: Gráficas Computacionales
 Fecha: 16 de agosto del 201
-Autor: A0133993 Alejandra Maria Perez Aleman
+Autor: A01376131 Mariana Pérez Sánchez
 *********************************************************/
 
 #include <GL/glew.h>
@@ -37,6 +37,7 @@ Transform _t3joint;
 Transform _t4joint;
 Transform _t5joint;
 Transform _t6joint;
+float angulo;
 
 // Función que va a inicializar toda la memoria del programa.
 void Initialize()
@@ -201,26 +202,26 @@ void Initialize()
 
 	//Posiciones
 	_transform.SetPosition(0.0f, 0.0f, -20.0f);
-	_t2.SetPosition(3.0f, 0.0f, 0.0f);
-	_t4.SetPosition(-6.0f, 0.0f, -20.0f);
-	_t3.SetPosition(0.0f, 0.0f, -23.0f);
-	_t5.SetPosition(0.0f, 0.0f, -17.0f);
-	_t6.SetPosition(12.0f, 0.0f, -20.0f);
+	_t2.SetPosition(3.20f, 0.0f, 0.0f);
+	_t4.SetPosition(-3.20f, 0.0f, 0.0f);
+	_t3.SetPosition(0.0f, 0.0f, 3.20f);
+	_t5.SetPosition(0.0f, 0.0f, -3.20f);
+	_t6.SetPosition(3.20f, 0.0f, 0.0f);
 
 
 	//Posiciones joint
 
 	_t3joint.SetPosition(0.0f, 0.0f, 3.0f);
-	_t5joint.SetPosition(0.0f, 0.0f, -23.0f);
-	_t4joint.SetPosition(-3.0f, 0.0f, -20.0f);
+	_t5joint.SetPosition(0.0f, 0.0f, -3.0f);
+	_t4joint.SetPosition(-3.0f, 0.0f, 0.0f);
 	_t2joint.SetPosition(3.0f, 0.0f, 0.0f);
-	_t6joint.SetPosition(9.0f, 0.0f, -20.0f);
+	_t6joint.SetPosition(3.0f, 0.0f, 0.0f);
 
 	LightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 	LightPosition = glm::vec3(-5.0, 5.0, 5.0);
 	CameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-	_camera.SetPosition(5.0f, 10.0f, 5.0f);
-	
+	_camera.SetPosition(0.0f, 10.0f, 12.0f);
+
 	myTexture.LoadTexture("Princess_Cookie1.png");
 
 
@@ -231,10 +232,17 @@ void Initialize()
 
 void MainLoop()
 {
+	angulo += 0.05f;
+	if (angulo >= 90.0f)
+		angulo = 0.0f;
+
+	_t2joint.Rotate(0.0f, 0.0f, 0.01f, true);
+	_t2joint.SetPosition(3.0f, 0.0f, 0.05f * glm::sin(glm::radians(angulo)));
+
 	// Borramos el buffer de color y profundidad siempre al inicio de un nuevo frame.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	
+
 	_shaderProgram.Activate();
 
 	//BASE
@@ -251,7 +259,7 @@ void MainLoop()
 	myTexture.Unbind();
 
 
-   //CARA 2-DERECHA
+	//CARA 2-DERECHA
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection()* _transform.GetModelMatrix() * _t2joint.GetModelMatrix() * _t2.GetModelMatrix());
 	_shaderProgram.SetUniformMatrix("modelMatrix", _t2.GetModelMatrix());
@@ -278,8 +286,7 @@ void MainLoop()
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Unbind();
 
-   /*//CARA 4- IZQUIERDA
-
+	//CARA 4- IZQUIERDA
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix() * _t4joint.GetModelMatrix() * _t4.GetModelMatrix());
 	_shaderProgram.SetUniformMatrix("modelMatrix", _t4.GetModelMatrix());
@@ -291,9 +298,7 @@ void MainLoop()
 	_mesh.Draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Unbind();
-
-	//CARA 6- ARRIBA
-
+	//CARA 5- ARRIBA
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection()* _transform.GetModelMatrix() * _t5joint.GetModelMatrix() * _t5.GetModelMatrix());
 	_shaderProgram.SetUniformMatrix("modelMatrix", _t5.GetModelMatrix());
@@ -305,10 +310,9 @@ void MainLoop()
 	_mesh.Draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Unbind();
-
 	//Cara extra
 	_shaderProgram.SetUniformi("DiffuseTexture", 0);
-	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection()* _transform.GetModelMatrix() * _t5joint.GetModelMatrix() * _t5.GetModelMatrix()* _t6joint.GetModelMatrix() * _t6.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection()* _transform.GetModelMatrix() * _t2joint.GetModelMatrix() * _t2.GetModelMatrix()* _t6joint.GetModelMatrix() * _t6.GetModelMatrix());
 	_shaderProgram.SetUniformMatrix("modelMatrix", _t6.GetModelMatrix());
 	_shaderProgram.SetUniformf("LightColor", LightColor);
 	_shaderProgram.SetUniformf("LightPosition", LightPosition);
@@ -318,7 +322,9 @@ void MainLoop()
 	_mesh.Draw(GL_TRIANGLES);
 	glActiveTexture(GL_TEXTURE0);
 	myTexture.Unbind();
-	*/
+
+	_shaderProgram.Deactivate();
+
 	_shaderProgram.Deactivate();
 
 
