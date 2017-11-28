@@ -1,7 +1,7 @@
 /*********************************************************
 Materia: Gráficas Computacionales
-Fecha: 16 de agosto del 2017
-Autor: A01376131 Mariana Pérez Sánchez
+Fecha: 28  de Noviembre del 2017
+Autor: A01373993  Alejandra María Pérez Alemán
 *********************************************************/
 
 #include <GL/glew.h>
